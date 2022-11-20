@@ -1,0 +1,14 @@
+#head {
+    background-color: #ededed;
+    border-bottom: 3px solid #000000;
+    padding: 5px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#inside-head {
+    padding: 10px;
+    text-align: center;
+    font-size: 50px;
+}
