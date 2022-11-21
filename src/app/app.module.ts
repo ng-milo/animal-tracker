@@ -13,6 +13,7 @@ import { TableDialogComponent } from './components/table-dialog/table-dialog.com
 import { MatDialogModule } from '@angular/material/dialog';
 import { TableReportComponent } from './components/table-report/table-report.component';
 import { PigComponent } from './components/pig/pig.component'
+import { SearchPipe } from './search.pipe';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { PigComponent } from './components/pig/pig.component'
     TableComponent,
     TableDialogComponent,
     TableReportComponent,
+    SearchPipe,
     PigComponent,
   ],
   imports: [

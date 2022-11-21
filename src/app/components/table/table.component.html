@@ -1,15 +1,19 @@
 
 
-
-<!-- <div>
+<div>
     <div class="container alternateOne" id="container-header">
-            <div>Location</div>
-            <div>Reported By</div>
-            <div>Time Reported</div>
-            <div>Status</div>
-            <div></div>
+        <div>Location</div>
+        <div>Reported By</div>
+        <div>Time Reported</div>
+        <div>Status</div>
+        <div></div>
     </div>
-
+    <app-pig
+    *ngFor="let p of pig | search:query"
+    [pig]="p"
+    (delete) = "onPersonDelete($event)"
+    ></app-pig>
+    <!-- 
     <div class="container alternateTwo">
         <div>Metrotown</div>
         <div>Lucas</div>
@@ -41,9 +45,9 @@
             <button (click)="showDialog()">More Info</button>
             <button class="buttonDelete">Delete</button>
         </div>
-    </div>
+    </div> --> 
 </div>
 
 <div id="buttonHolder">
     <button class="create" (click)="showReport()">Create Pig Report</button>
-</div> -->
+</div>

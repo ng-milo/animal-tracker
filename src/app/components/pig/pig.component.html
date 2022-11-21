@@ -1,0 +1,33 @@
+
+<div class="container alternateTwo">
+    <div [textContent]="pig.location"></div>
+    <div [textContent]="pig.name"></div>
+    <br> {{ pig.added_on | date:'d MMM, yyyy' }} <br>
+    <div [textContent]="pig.status"></div>
+    <div>
+        <button (click)="showDialog()">More Info</button>
+        <button class="buttonDelete">Delete</button>
+    </div>
+</div>
+
+<!-- <p
+  [ngClass]="{ 'instructor-style':person.instructor }"
+>
+    <u class="title">PERSON</u> <br>
+    name: 
+    <span [textContent]="person.name"></span> <br>
+    added_on: {{ person.added_on | date:'yyyy, MMM d' }} <br>
+    instructor: 
+      <span *ngIf="person.instructor; then ins else notins"></span> <br>
+      <ng-template #ins>&check;</ng-template>
+      <ng-template #notins>&#10005;</ng-template>
+    
+    <button 
+      class="btn btn-outline-danger"
+      id="delete"
+      (click)="onDelete($event,person.name)"
+      >DELETE</button> <br>
+    <button class="btn btn-outline-primary">EDIT</button>
+    
+</p> -->
+

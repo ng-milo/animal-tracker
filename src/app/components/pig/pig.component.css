@@ -1,3 +1,24 @@
+
+
+p {
+    border: 1px solid black;
+    width:100%;
+    padding:1em;
+    border-radius: 1em;
+    user-select: none;
+}
+
+.instructor-style{
+    border:1px solid red;
+}
+
+.title {
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid black;
+    font-size: x-large;
+}
+
 .container {
     display:grid;
     grid-template-columns: repeat(5, 1fr);
