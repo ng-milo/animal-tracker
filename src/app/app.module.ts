@@ -14,6 +14,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TableReportComponent } from './components/table-report/table-report.component';
 import { PigComponent } from './components/pig/pig.component'
 import { SearchPipe } from './search.pipe';
+import { PasswordComponent } from './components/password/password.component';
+import { PasswordReportComponent } from './components/password-report/password-report.component';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +28,8 @@ import { SearchPipe } from './search.pipe';
     TableReportComponent,
     SearchPipe,
     PigComponent,
+    PasswordComponent,
+    PasswordReportComponent,
   ],
   imports: [
     BrowserModule,
