@@ -1,4 +1,6 @@
-
+.hideThis {
+    display: none;
+}
 
 p {
     border: 1px solid black;

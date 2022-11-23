@@ -59,27 +59,6 @@ export class TableComponent implements OnInit {
       }
     });
     console.log(this.pig)
-    // Set this.pig to the data from the server
-    // this.pig = [
-    //   {
-    //     name: "bobby",
-    //     added_on: (new Date().getTime()),
-    //     instructor: true,
-    //     age: 25,
-    //   },
-    //   {
-    //     name: "string",
-    //     phoneNumber: 12345678900,
-    //     breed: "string",
-    //     pid: "number",
-    //     location: "string",
-    //     longitude: "number",
-    //     latitude: "number",
-    //     notes: "string",
-    //     added_on: (new Date().getTime()),
-    //     status: "boolean",
-    //   }
-    // ]
   }
 
   onPersonDelete(evt:any){

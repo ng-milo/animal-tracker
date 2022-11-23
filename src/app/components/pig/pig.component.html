@@ -1,33 +1,21 @@
 
 <div class="container alternateTwo">
-    <div [textContent]="pig.location"></div>
-    <div [textContent]="pig.name"></div>
+    <div id="location" [textContent]="pig.location"></div>
+    <div id="name" [textContent]="pig.name"></div>
     <br> {{ pig.added_on | date:'d MMM, yyyy' }} <br>
-    <div [textContent]="pig.status"></div>
+    <div id="status" [textContent]="pig.status"></div>
     <div>
         <button (click)="showDialog()">More Info</button>
         <button class="buttonDelete">Delete</button>
     </div>
 </div>
 
-<!-- <p
-  [ngClass]="{ 'instructor-style':person.instructor }"
->
-    <u class="title">PERSON</u> <br>
-    name: 
-    <span [textContent]="person.name"></span> <br>
-    added_on: {{ person.added_on | date:'yyyy, MMM d' }} <br>
-    instructor: 
-      <span *ngIf="person.instructor; then ins else notins"></span> <br>
-      <ng-template #ins>&check;</ng-template>
-      <ng-template #notins>&#10005;</ng-template>
-    
-    <button 
-      class="btn btn-outline-danger"
-      id="delete"
-      (click)="onDelete($event,person.name)"
-      >DELETE</button> <br>
-    <button class="btn btn-outline-primary">EDIT</button>
-    
-</p> -->
+<!-- Store the other information for the pig -->
+<div class="hideThis" id="pNumber" [textContent]="pig.phoneNumber"></div>
+<div class="hideThis" id="breed" [textContent]="pig.breed"></div>
+<div class="hideThis" id="pid" [textContent]="pig.pid"></div>
+<div class="hideThis" id="longitude" [textContent]="pig.longitude"></div>
+<div class="hideThis" id="latitude" [textContent]="pig.latitude"></div>
+<div class="hideThis" id="notes" [textContent]="pig.notes"></div>
+<div class="hideThis" id="date" [textContent]="pig.added_on"></div>
 
