@@ -1,14 +1,46 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
+import { HttpHeaders } from '@angular/common/http';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+    Authorization: 'Fxfdw2XfGZAwwnzzPQNVCwcfuu7d2x'
+  })
+};
+
+interface outlineFrame {
+  key: string;
+  data: Pig;
+}
+
+interface Pig {
+  name: string;
+  phoneNumber: number;
+  breed: string;
+  pid: number;
+  location: string;
+  longitude: number;
+  latitude: number;
+  notes: string;
+  added_on: number;
+  status: boolean;
+}
 
 @Component({
   selector: 'app-table-report',
   templateUrl: './table-report.component.html',
   styleUrls: ['./table-report.component.css']
 })
+
+@Injectable()
 export class TableReportComponent {
-  constructor(private dialogRef: MatDialogRef<Dialog>) {
+  constructor(private http: HttpClient, private dialogRef: MatDialogRef<Dialog>) {
   }
 
   ngOnInit() {
@@ -162,8 +194,37 @@ export class TableReportComponent {
     // TODO: Implement saving information to database
     // Needs to save time, date, and status
 
+    // First create outlineFrame with all of the pig information inside it
+    let tmpPig: Pig = {
+      name: "John",
+      phoneNumber: 6047211234,
+      breed: "German Shepard",
+      pid: 123456789,
+      location: "Simon Fraser University",
+      longitude: -200.12,
+      latitude: 100.512,
+      notes: "Located on Rodeo Drive",
+      added_on: 10,
+      status: true,
+    }
+    let content: outlineFrame = {
+      key: "Testings",
+      data: tmpPig,
+    }
+    // Then call the function to add the outlineFrame to the database
+    this.addPig(content).subscribe((data) => {});
+
+
     // Close the website
     this.dialogRef.close();
   }
 
+  addPig(pig: any): Observable<any> {
+    return this.http.post<any>("https://272.selfip.net/apps/2ngwvpOmxG/collections/Pig/documents/", JSON.stringify(pig), httpOptions)
+      .pipe();
+  }
+
+
 }
+
+
