@@ -1,13 +1,12 @@
 
-
-<div>
-    <div class="container alternateOne" id="container-header">
-        <div>Location</div>
-        <div>Reported By</div>
-        <div>Time Reported</div>
-        <div>Status</div>
-        <div></div>
-    </div>
+<div class="container alternateOne" id="container-header">
+    <div (click)="locationSort(this)">Location</div>
+    <div (click)="nameSort(this)">Reported By</div>
+    <div (click)="timeSort(this)">Time Reported</div>
+    <div>Status</div>
+    <div></div>
+</div>
+<div id="theSortingTable">
     <app-pig
     *ngFor="let p of pig | search:query"
     [pig]="p"

@@ -28,8 +28,8 @@ interface Pig {
   longitude: number;
   latitude: number;
   notes: string;
-  added_on: number;
-  status: boolean;
+  added_on: Date;
+  status: string;
 }
 
 @Component({
@@ -59,10 +59,31 @@ export class MapComponent {
     // Add all pigs to map
     this.getPigs().subscribe((data) => {
       let tmpMarker:any;
+      let tmplongHolder:any = [];
+      let tmpLatHolder: any = [];
+      let tmpPosNum: any = [];
       for(let i = 0; i < data.length; i++){
-        tmpMarker = L.marker([data[i].data.latitude, data[i].data.longitude]).addTo(this.map);
-        tmpMarker.bindPopup("<b>" + data[i].data.notes + "</b>");
+        tmplongHolder.push(data[i].data.longitude) 
+        tmpLatHolder.push(data[i].data.latitude);
+        tmpPosNum.push(1);
+      }
+      // Check for overlapping latitude and longitudes
+      for(let i = 0; i < tmplongHolder.length; i++){
+        for(let j = 0; j < tmplongHolder.length; j++){
+          if(i != j){
+            if(tmplongHolder[i] == tmplongHolder[j] && tmpLatHolder[i] == tmpLatHolder[j]){
+              tmplongHolder.splice(j, 1);
+              tmpLatHolder.splice(j, 1);
+              tmpPosNum[i] += 1;
+              j = tmplongHolder.length;
+            }
+          }
+        }
+      }
+      for (let i = 0; i < tmplongHolder.length; i++) {
+        tmpMarker = L.marker([tmplongHolder[i], tmpLatHolder[i]]).addTo(this.map);
         this.markerList.push(tmpMarker);
+        this.markerList[i].bindPopup("<b>" + tmpPosNum[i] + " pig reported.</b>");
       }
     });
 

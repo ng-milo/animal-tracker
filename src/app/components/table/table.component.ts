@@ -32,8 +32,8 @@ interface Pig {
   longitude: number;
   latitude: number;
   notes: string;
-  added_on: number;
-  status: boolean;
+  added_on: Date;
+  status: string;
 }
 
 @Component({
@@ -58,12 +58,9 @@ export class TableComponent implements OnInit {
         this.pig.push(<Pig>data[i].data);
       }
     });
-    console.log(this.pig)
   }
 
   onPersonDelete(evt:any){
-    // console.log(`parent comp: person ${evt["ind"]} has been deleted`)
-    // find the person evt["ind"] and delete him or her from people
     this.pig = this.pig.filter(p=>p.name!==evt["ind"])
   }
 
@@ -103,6 +100,75 @@ export class TableComponent implements OnInit {
     return this.http.get<any>("https://272.selfip.net/apps/2ngwvpOmxG/collections/Pig/documents/", httpOptions)
     .pipe();
   }
+
+  locationSort(doc:any){
+    let theTable:any = document.getElementById("theSortingTable")!.childNodes;
+    let locationList:any = [];
+    if (theTable != null && theTable.length > 0 && theTable[0].innerText != null){
+    for (let i: number = 0; i<document.getElementById("theSortingTable")!.childNodes.length -1; i++){
+      locationList.push(theTable[i].innerText.split("\n")[0]);
+    }
+    locationList = locationList.sort((a:string, b:string) => a.localeCompare(b));
+
+    for (let i = 0; i< locationList.length; i++){
+      for (let j = 0; j<document.getElementById("theSortingTable")!.childNodes.length -1; j++){
+        if (locationList[i] == theTable[j].innerText.split("\n")[0]){
+          document.getElementById("theSortingTable")!.appendChild(theTable[j]);
+        }
+      }
+    }
+  }
+  }
+
+  nameSort(doc:any){
+    let theTable:any = document.getElementById("theSortingTable")!.childNodes;
+    let nameList:any = [];
+    if (theTable != null && theTable.length > 0 && theTable[0].innerText != null){
+    for (let i: number = 0; i<document.getElementById("theSortingTable")!.childNodes.length -1; i++){
+      nameList.push(theTable[i].innerText.split("\n")[1]);
+    }
+    nameList = nameList.sort((a:string, b:string) => a.localeCompare(b));
+
+    for (let i = 0; i< nameList.length; i++){
+      for (let j = 0; j<document.getElementById("theSortingTable")!.childNodes.length -1; j++){
+        if (nameList[i] == theTable[j].innerText.split("\n")[1]){
+          document.getElementById("theSortingTable")!.appendChild(theTable[j]);
+        }
+      }
+    }
+  }
+  }
+
+  timeSort(doc:any){
+    let theTable:any = document.getElementById("theSortingTable")!.childNodes;
+    let timeList:any = [];
+    if (theTable != null && theTable.length > 0 && theTable[0].innerText != null){
+    for (let i: number = 0; i<document.getElementById("theSortingTable")!.childNodes.length -1; i++){
+      timeList.push(theTable[i].innerText.split("\n")[4]);
+    }
+    // timeList = timeList.sort((a:Date, b:Date) => (a.getTime).localeCompare(b.getTime));
+
+    
+    // timeList = timeList.sort((a: any, b: any) => {
+    //   return this.getTime(a.startDate) - this.getTime(b.startDate);
+    // });
+
+    console.log(timeList[0]);
+
+    // for (let i = 0; i< locationList.length; i++){
+    //   for (let j = 0; j<document.getElementById("theSortingTable")!.childNodes.length -1; j++){
+    //     if (locationList[i] == theTable[j].innerText.split("\n")[0]){
+    //       document.getElementById("theSortingTable")!.appendChild(theTable[j]);
+    //     }
+    //   }
+    // }
+  }
+  }
+
+  private getTime(date?: Date) {
+    return date != null ? new Date(date).getTime() : 0;
+  }
+
 
 }
 

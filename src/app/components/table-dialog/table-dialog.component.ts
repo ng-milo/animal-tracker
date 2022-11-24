@@ -25,7 +25,8 @@ export class TableDialogComponent {
   ngOnInit(): void {
     document.getElementById("names")!.innerText = this.name;
     document.getElementById("phoneNumber")!.innerText = this.phoneNum;
-    document.getElementById("timeDate")!.innerText = this.date;
+    let tmpDate: Date = new Date(this.date);
+    document.getElementById("timeDate")!.innerText = tmpDate.toDateString();
     document.getElementById("nameLocation")!.innerText = this.location;
     document.getElementById("note")!.innerText = this.notes;
     document.getElementById("pigBreed")!.innerText = this.breed;

@@ -28,8 +28,8 @@ interface Pig {
   longitude: number;
   latitude: number;
   notes: string;
-  added_on: number;
-  status: boolean;
+  added_on: Date;
+  status: string;
 }
 
 @Component({
@@ -48,63 +48,71 @@ export class TableReportComponent {
 
   checkInfo() {
     // Name
-    let tmp:string = (<HTMLInputElement>document.getElementById("name")!).value.replace(/[^A-Za-z]+$/g, '');
-    if(tmp != (<HTMLInputElement>document.getElementById("name")!).value){
-      (<HTMLInputElement>document.getElementById("name")!).setCustomValidity("Please enter letters only")
+    let tmp:string = (<HTMLInputElement>document.getElementById("reportName")!).value.replace(/[^A-Za-z]+$/g, '');
+    if(tmp != (<HTMLInputElement>document.getElementById("reportName")!).value){
+      (<HTMLInputElement>document.getElementById("reportName")!).setCustomValidity("Please enter letters only")
     } 
     else{
-      (<HTMLInputElement>document.getElementById("name")!).setCustomValidity("")
+      (<HTMLInputElement>document.getElementById("reportName")!).setCustomValidity("")
     }
-    (<HTMLInputElement>document.getElementById("name")!).value = tmp;
-    (<HTMLInputElement>document.getElementById("name")!).reportValidity();
+    (<HTMLInputElement>document.getElementById("reportName")!).value = tmp;
+    (<HTMLInputElement>document.getElementById("reportName")!).reportValidity();
 
     // Phone number
-    // ????
+    tmp = (<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '');
+    if(tmp != (<HTMLInputElement>document.getElementById("reportNumber")!).value){
+      (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("Please enter numbers only")
+    } 
+    else{
+      (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("")
+    }
+    (<HTMLInputElement>document.getElementById("reportNumber")!).value = tmp;
+    (<HTMLInputElement>document.getElementById("reportNumber")!).reportValidity();
 
     // Breed
-    tmp = (<HTMLInputElement>document.getElementById("breed")!).value.replace(/[^A-Za-z]+$/g, '');
-    if(tmp != (<HTMLInputElement>document.getElementById("breed")!).value){
-      (<HTMLInputElement>document.getElementById("breed")!).setCustomValidity("Please enter letters only")
+    tmp = (<HTMLInputElement>document.getElementById("reportBreed")!).value.replace(/[^A-Za-z]+$/g, '');
+    if(tmp != (<HTMLInputElement>document.getElementById("reportBreed")!).value){
+      (<HTMLInputElement>document.getElementById("reportBreed")!).setCustomValidity("Please enter letters only")
     } 
     else{
-      (<HTMLInputElement>document.getElementById("breed")!).setCustomValidity("")
+      (<HTMLInputElement>document.getElementById("reportBreed")!).setCustomValidity("")
     }
-    (<HTMLInputElement>document.getElementById("breed")!).value = tmp;
-    (<HTMLInputElement>document.getElementById("breed")!).reportValidity();
+    (<HTMLInputElement>document.getElementById("reportBreed")!).value = tmp;
+    (<HTMLInputElement>document.getElementById("reportBreed")!).reportValidity();
 
     // pigId
-    tmp = (<HTMLInputElement>document.getElementById("pigId")!).value.replace(/[^0-9]/g, '');
-    if(tmp != (<HTMLInputElement>document.getElementById("pigId")!).value){
-      (<HTMLInputElement>document.getElementById("pigId")!).setCustomValidity("Please enter numbers only")
+    tmp = (<HTMLInputElement>document.getElementById("reportId")!).value.replace(/[^0-9]/g, '');
+    if(tmp != (<HTMLInputElement>document.getElementById("reportId")!).value){
+      (<HTMLInputElement>document.getElementById("reportId")!).setCustomValidity("Please enter numbers only")
     } 
     else{
-      (<HTMLInputElement>document.getElementById("pigId")!).setCustomValidity("")
+      (<HTMLInputElement>document.getElementById("reportId")!).setCustomValidity("")
     }
-    (<HTMLInputElement>document.getElementById("pigId")!).value = tmp;
-    (<HTMLInputElement>document.getElementById("pigId")!).reportValidity();
+    (<HTMLInputElement>document.getElementById("reportId")!).value = tmp;
+    (<HTMLInputElement>document.getElementById("reportId")!).reportValidity();
 
     // nameLocation
-    tmp = (<HTMLInputElement>document.getElementById("nameLocation")!).value.replace(/[^A-Za-z]+$/g, '');
-    if(tmp != (<HTMLInputElement>document.getElementById("nameLocation")!).value){
-      (<HTMLInputElement>document.getElementById("nameLocation")!).setCustomValidity("Please enter letters only")
+    tmp = (<HTMLInputElement>document.getElementById("reportNames")!).value.replace(/[^A-Za-z]+$/g, '');
+    if(tmp != (<HTMLInputElement>document.getElementById("reportNames")!).value){
+      (<HTMLInputElement>document.getElementById("reportNames")!).setCustomValidity("Please enter letters only")
     } 
     else{
-      (<HTMLInputElement>document.getElementById("nameLocation")!).setCustomValidity("")
+      (<HTMLInputElement>document.getElementById("reportNames")!).setCustomValidity("")
     }
-    (<HTMLInputElement>document.getElementById("nameLocation")!).value = tmp;
-    (<HTMLInputElement>document.getElementById("nameLocation")!).reportValidity();
+    (<HTMLInputElement>document.getElementById("reportNames")!).value = tmp;
+    (<HTMLInputElement>document.getElementById("reportNames")!).reportValidity();
 
     // longitude
-    tmp = (<HTMLInputElement>document.getElementById("longitude")!).value.replace(/[^-.0-9]/g, '');
+    tmp = (<HTMLInputElement>document.getElementById("reportLong")!).value.replace(/[^-.0-9]/g, '');
     tmp.replace(/^0[^.]/, '0');
     if (tmp.indexOf('-') == 0) {
-      for (let i = 0; i<(<HTMLInputElement>document.getElementById("longitude")!).value.length; i++){
+      for (let i = 0; i<(<HTMLInputElement>document.getElementById("reportLong")!).value.length; i++){
         tmp = tmp.replace('-', '');
       }
       tmp = '-' + tmp;
     }
     else{
-      for (let i = 0; i<(<HTMLInputElement>document.getElementById("longitude")!).value.length; i++){
+      for (let i = 0; i<(<HTMLInputElement>document.getElementById("reportLong")!).value.length; i++){
         tmp = tmp.replace('-', '');
       }
     }
@@ -125,27 +133,27 @@ export class TableReportComponent {
             tmp = rev.split("").reverse().join("");
         }
     }
-    if (tmp != (<HTMLInputElement>document.getElementById("longitude")!).value || (parseFloat((<HTMLInputElement>document.getElementById("longitude")!).value)) == null) { // Display error message
-      (<HTMLInputElement>document.getElementById("longitude")!).setCustomValidity("Please ensure input only contains numbers");
-      (<HTMLInputElement>document.getElementById("longitude")!).value = tmp;
+    if (tmp != (<HTMLInputElement>document.getElementById("reportLong")!).value || (parseFloat((<HTMLInputElement>document.getElementById("reportLong")!).value)) == null) { // Display error message
+      (<HTMLInputElement>document.getElementById("reportLong")!).setCustomValidity("Please ensure input only contains numbers");
+      (<HTMLInputElement>document.getElementById("reportLong")!).value = tmp;
     }
     else {
-      (<HTMLInputElement>document.getElementById("longitude")!).setCustomValidity("");
+      (<HTMLInputElement>document.getElementById("reportLong")!).setCustomValidity("");
     }
-    (<HTMLInputElement>document.getElementById("longitude")!).reportValidity();
+    (<HTMLInputElement>document.getElementById("reportLong")!).reportValidity();
 
 
     // latitude
-    tmp = (<HTMLInputElement>document.getElementById("latitude")!).value.replace(/[^-.0-9]/g, '');
+    tmp = (<HTMLInputElement>document.getElementById("reportLati")!).value.replace(/[^-.0-9]/g, '');
     tmp.replace(/^0[^.]/, '0');
     if (tmp.indexOf('-') == 0) {
-      for (let i = 0; i<(<HTMLInputElement>document.getElementById("latitude")!).value.length; i++){
+      for (let i = 0; i<(<HTMLInputElement>document.getElementById("reportLati")!).value.length; i++){
         tmp = tmp.replace('-', '');
       }
       tmp = '-' + tmp;
     }
     else{
-      for (let i = 0; i<(<HTMLInputElement>document.getElementById("latitude")!).value.length; i++){
+      for (let i = 0; i<(<HTMLInputElement>document.getElementById("reportLati")!).value.length; i++){
         tmp = tmp.replace('-', '');
       }
     }
@@ -166,61 +174,61 @@ export class TableReportComponent {
             tmp = rev.split("").reverse().join("");
         }
     }
-    if (tmp != (<HTMLInputElement>document.getElementById("latitude")!).value || (parseFloat((<HTMLInputElement>document.getElementById("latitude")!).value)) == null) { // Display error message
-      (<HTMLInputElement>document.getElementById("latitude")!).setCustomValidity("Please ensure input only contains numbers");
-      (<HTMLInputElement>document.getElementById("latitude")!).value = tmp;
+    if (tmp != (<HTMLInputElement>document.getElementById("reportLati")!).value || (parseFloat((<HTMLInputElement>document.getElementById("reportLati")!).value)) == null) { // Display error message
+      (<HTMLInputElement>document.getElementById("reportLati")!).setCustomValidity("Please ensure input only contains numbers");
+      (<HTMLInputElement>document.getElementById("reportLati")!).value = tmp;
     }
     else {
-      (<HTMLInputElement>document.getElementById("latitude")!).setCustomValidity("");
+      (<HTMLInputElement>document.getElementById("reportLati")!).setCustomValidity("");
     }
-    (<HTMLInputElement>document.getElementById("latitude")!).reportValidity();
+    (<HTMLInputElement>document.getElementById("reportLati")!).reportValidity();
 
     // Dont need anything for notes
 
     }
 
   submitInfo() {
-    
-    // (<HTMLInputElement>document.getElementById("name")!).value;
-    // (<HTMLInputElement>document.getElementById("pNumber")!).value;
-    // (<HTMLInputElement>document.getElementById("breed")!).value;
-    // (<HTMLInputElement>document.getElementById("pigId")!).value;
-    // (<HTMLInputElement>document.getElementById("nameLocation")!).value;
-    // (<HTMLInputElement>document.getElementById("longitude")!).value;
-    // (<HTMLInputElement>document.getElementById("latitude")!).value;
-    // (<HTMLInputElement>document.getElementById("notes")!).value;
+    if ((<HTMLInputElement>document.getElementById("reportName")!).value != null && (<HTMLInputElement>document.getElementById("reportNumber")!).value != null && (<HTMLInputElement>document.getElementById("reportBreed")!).value != null && (<HTMLInputElement>document.getElementById("reportId")!).value != null && (<HTMLInputElement>document.getElementById("reportNames")!).value != null && (<HTMLInputElement>document.getElementById("reportLong")!).value != null && (<HTMLInputElement>document.getElementById("reportLati")!).value != null && (<HTMLInputElement>document.getElementById("reportNotes")!).value != null) {
 
-    this.checkInfo();
-    // TODO: Implement saving information to database
-    // Needs to save time, date, and status
+      this.checkInfo();
+      // Needs to save time, date, and status
+      // First create outlineFrame with all of the pig information inside it
+      let tmpPig: Pig = {
+        name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+        phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value),
+        breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+        pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+        location: <string>(<HTMLInputElement>document.getElementById("reportNames")!).value,
+        longitude: Number((<HTMLInputElement>document.getElementById("reportLong")!).value),
+        latitude: Number((<HTMLInputElement>document.getElementById("reportLati")!).value),
+        notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+        added_on: new Date(),
+        status: "READY FOR PICKUP",
+      }
+      let totalPigs: number = 0;
+      this.getPig().subscribe((data) => {
+        totalPigs = data.length;
+        let content: outlineFrame = {
+          key: "Pig" + totalPigs,
+          data: tmpPig,
+        }
+        this.addPig(content).subscribe((data) => {});
+      });
+      // Refresh the table component
+      
+      // Close the website
+      this.dialogRef.close();
 
-    // First create outlineFrame with all of the pig information inside it
-    let tmpPig: Pig = {
-      name: "John",
-      phoneNumber: 6047211234,
-      breed: "German Shepard",
-      pid: 123456789,
-      location: "Simon Fraser University",
-      longitude: -200.12,
-      latitude: 100.512,
-      notes: "Located on Rodeo Drive",
-      added_on: 10,
-      status: true,
     }
-    let content: outlineFrame = {
-      key: "Testings",
-      data: tmpPig,
-    }
-    // Then call the function to add the outlineFrame to the database
-    this.addPig(content).subscribe((data) => {});
-
-
-    // Close the website
-    this.dialogRef.close();
   }
 
   addPig(pig: any): Observable<any> {
     return this.http.post<any>("https://272.selfip.net/apps/2ngwvpOmxG/collections/Pig/documents/", JSON.stringify(pig), httpOptions)
+      .pipe();
+  }
+
+  getPig(): Observable<any> {
+    return this.http.get<any>("https://272.selfip.net/apps/2ngwvpOmxG/collections/Pig/documents/", httpOptions)
       .pipe();
   }
 

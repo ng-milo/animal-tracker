@@ -16,11 +16,19 @@ export class PasswordReportComponent {
   constructor(private matDialog:MatDialog, private dialogRef: MatDialogRef<Dialog>){}
 
   showPasswordReport(){
-    let password = (<HTMLInputElement>document.getElementById("password")!).value;
+    let password = (<HTMLInputElement>document.getElementById("reportPassword")!).value;
+    (<HTMLInputElement>document.getElementById("reportPassword")!).setCustomValidity("");
+    (<HTMLInputElement>document.getElementById("reportPassword")!).reportValidity();
     const md5 = new Md5();
     if(md5.appendStr(password).end() == "84892b91ef3bf9d216bbc6e88d74a77c"){
       this.dialogRef.close();
       this.showReport();
+    }
+    else{
+      (<HTMLInputElement>document.getElementById("reportPassword")!).setCustomValidity("Incorrect password");
+      (<HTMLInputElement>document.getElementById("reportPassword")!).reportValidity();
+      (<HTMLInputElement>document.getElementById("reportPassword")!).setCustomValidity("");
+      (<HTMLInputElement>document.getElementById("reportPassword")!).reportValidity();
     }
   }
 

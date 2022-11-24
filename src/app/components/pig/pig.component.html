@@ -1,12 +1,12 @@
 
 <div class="container alternateTwo">
-    <div id="location" [textContent]="pig.location"></div>
-    <div id="name" [textContent]="pig.name"></div>
+    <div name="pigLocation" id="location" [textContent]="pig.location"></div>
+    <div name="pigName" id="name" [textContent]="pig.name"></div>
     <br> {{ pig.added_on | date:'d MMM, yyyy' }} <br>
-    <div id="status" [textContent]="pig.status"></div>
+    <div id="status" [textContent]="pig.status" (click)="changeStatus(this)"></div>
     <div>
-        <button (click)="showDialog()">More Info</button>
-        <button class="buttonDelete">Delete</button>
+        <button (click)="showDialog(this)">More Info</button>
+        <button class="buttonDelete" id="tableDelete" (click)="deletePig(this)" (click)="onDelete($event,pig.name)">Delete</button>
     </div>
 </div>
 
