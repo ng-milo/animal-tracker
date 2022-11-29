@@ -32,6 +32,12 @@ interface Pig {
   status: string;
 }
 
+interface coordinates {
+  location: string;
+  longitude: number;
+  latitude: number;
+}
+
 @Component({
   selector: 'app-table-report',
   templateUrl: './table-report.component.html',
@@ -40,10 +46,40 @@ interface Pig {
 
 @Injectable()
 export class TableReportComponent {
+
+  onOffVar = true;
+  places: Array<coordinates> = [];
+
   constructor(private http: HttpClient, private dialogRef: MatDialogRef<Dialog>) {
   }
 
   ngOnInit() {
+    
+    this.places = [];
+    let placeStuff = document.getElementById("reportPreviousPlace")!;
+    // Get number of total pigs 
+    this.getPigs().subscribe((data) => {
+      for(let i = 0; i < data.length; i++){
+        let tmpCoord: coordinates = {
+          location: data[i].data.location,
+          longitude: data[i].data.longitude,
+          latitude: data[i].data.latitude,
+        }
+        this.places.push(tmpCoord);
+        let newElement = document.createElement("option");
+        newElement.setAttribute("value", data[i].data.location);
+        newElement.innerHTML = data[i].data.location;
+        placeStuff.appendChild(newElement);
+      }
+    });
+
+
+
+  }
+
+  getPigs(): Observable<any> {
+    return this.http.get<any>("https://272.selfip.net/apps/2ngwvpOmxG/collections/Pig/documents/", httpOptions)
+    .pipe();
   }
 
   checkInfo() {
@@ -193,17 +229,43 @@ export class TableReportComponent {
       this.checkInfo();
       // Needs to save time, date, and status
       // First create outlineFrame with all of the pig information inside it
-      let tmpPig: Pig = {
-        name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
-        phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value),
-        breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
-        pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
-        location: <string>(<HTMLInputElement>document.getElementById("reportNames")!).value,
-        longitude: Number((<HTMLInputElement>document.getElementById("reportLong")!).value),
-        latitude: Number((<HTMLInputElement>document.getElementById("reportLati")!).value),
-        notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
-        added_on: new Date(),
-        status: "READY FOR PICKUP",
+      let tmpPig: Pig;
+      if (this.onOffVar){
+        let places = (<HTMLInputElement>document.getElementById("reportPreviousPlace")!).value
+        let tmpLong: number = 0;
+        let tmpLat: number = 0;
+        for (let i = 0; i<this.places.length; i++){
+          if (this.places[i].location == places){
+            tmpLong = this.places[i].longitude;
+            tmpLat = this.places[i].latitude;
+          }
+        }
+        tmpPig = {
+          name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+          phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value),
+          breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+          pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+          location: <string>places,
+          longitude: tmpLong,
+          latitude: tmpLat,
+          notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+          added_on: new Date(),
+          status: "READY FOR PICKUP",
+        }
+      }
+      else {
+        tmpPig = {
+          name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+          phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value),
+          breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+          pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+          location: <string>(<HTMLInputElement>document.getElementById("reportNames")!).value,
+          longitude: Number((<HTMLInputElement>document.getElementById("reportLong")!).value),
+          latitude: Number((<HTMLInputElement>document.getElementById("reportLati")!).value),
+          notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+          added_on: new Date(),
+          status: "READY FOR PICKUP",
+        }
       }
       let totalPigs: number = 0;
       this.getPig().subscribe((data) => {
@@ -230,6 +292,20 @@ export class TableReportComponent {
   getPig(): Observable<any> {
     return this.http.get<any>("https://272.selfip.net/apps/2ngwvpOmxG/collections/Pig/documents/", httpOptions)
       .pipe();
+  }
+
+  switchTest(){
+    // Toggle between the two states
+    if (this.onOffVar == true){
+      document.getElementById("locationSelector")!.style.display = "none";
+      document.getElementById("newLocation")!.style.display = "flex";
+      this.onOffVar = false;
+    }
+    else{
+      document.getElementById("locationSelector")!.style.display = "block";
+      document.getElementById("newLocation")!.style.display = "none";
+      this.onOffVar = true;
+    }
   }
 
 

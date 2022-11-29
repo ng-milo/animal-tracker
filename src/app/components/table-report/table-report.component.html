@@ -28,22 +28,19 @@
           </div>
         </div>
         <!-- Third Row -->
-        <div class="ml-10 mb-5 flex">
-          <div class="form-check form-switch">
-            <input class="form-check-input float-left -ml-10 h-5 w-9 cursor-pointer appearance-none rounded-full bg-gray-300 bg-contain bg-no-repeat align-top shadow-sm focus:outline-none" type="checkbox" id="flexSwitchCheckDefault" />
-            <label class="form-check-label inline-block" for="flexSwitchCheckDefault">Previous Location</label>
-          </div>
+        <div class="mb-5 flex">
+          <mat-checkbox (change)="switchTest()">Previous Location</mat-checkbox>
         </div>
 
         <!-- Fourth Row -->
-        <div class="-mx-3">
+        <div class="-mx-3" id="locationSelector">
           <div class="max mb-5 w-full px-3">
             <label for="dropLocation" class="mb-3 block text-base"> Location </label>
-            <select name="dropLocation" id="reportNames" placeholder="SFU" class="border-gray w-full rounded-md border py-3.5 pl-5 text-base outline-none focus:border-amber-200" (input)="checkInfo()"></select>
+            <select name="dropLocation" id="reportPreviousPlace" class="border-gray w-full rounded-md border py-3.5 pl-5 text-base outline-none focus:border-amber-200" (input)="checkInfo()"></select>
           </div>
         </div>
         <!-- Fifth Row -->
-        <div class="-mx-3 flex flex-row">
+        <div class="-mx-3 flex flex-row" id="newLocation">
           <div class="mb-5 w-full px-3 sm:w-1/3">
             <label for="nameLocation" class="mb-3 block text-base"> Location </label>
             <input type="text" name="nameLocation" id="reportNames" placeholder="SFU" class="border-gray w-full rounded-md border py-3.5 pl-5 text-base outline-none focus:border-amber-200" (input)="checkInfo()" />

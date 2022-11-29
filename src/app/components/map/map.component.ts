@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
+import { SharedService } from '../../shared.service';
+import { Subscription } from 'rxjs';
 
 
 const httpOptions = {
@@ -39,9 +41,12 @@ interface Pig {
 })
 
 @Injectable()
-export class MapComponent {
+export class MapComponent implements OnInit {
   private map: any;
   private markerList: any;
+  eventSubscription: Subscription;
+
+  ngOnInit() {}
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -65,7 +70,6 @@ export class MapComponent {
       for(let i = 0; i < data.length; i++){
         tmplongHolder.push(data[i].data.longitude) 
         tmpLatHolder.push(data[i].data.latitude);
-        tmpPosNum.push(1);
       }
       // Check for overlapping latitude and longitudes
       for(let i = 0; i < tmplongHolder.length; i++){
@@ -74,12 +78,25 @@ export class MapComponent {
             if(tmplongHolder[i] == tmplongHolder[j] && tmpLatHolder[i] == tmpLatHolder[j]){
               tmplongHolder.splice(j, 1);
               tmpLatHolder.splice(j, 1);
-              tmpPosNum[i] += 1;
+              tmpPosNum.splice(j, 1);
               j = tmplongHolder.length;
             }
           }
         }
       }
+
+      for (let i = 0; i< tmplongHolder.length; i++) {
+        tmpPosNum.push(0);
+      }
+
+      for(let i = 0; i < data.length; i++){
+        for (let k = 0; k< tmpPosNum.length; k++) {
+          if(tmplongHolder[k] == data[i].data.longitude && tmpLatHolder[k] == data[i].data.latitude){
+            tmpPosNum[k] += 1;
+          }
+        }
+      }
+
       for (let i = 0; i < tmplongHolder.length; i++) {
         tmpMarker = L.marker([tmplongHolder[i], tmpLatHolder[i]]).addTo(this.map);
         this.markerList.push(tmpMarker);
@@ -90,7 +107,13 @@ export class MapComponent {
     tiles.addTo(this.map);
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private sharedService:SharedService) {
+    this.eventSubscription = this.sharedService.getEvent().subscribe(() => {
+      this.resetMarkers();
+    });
+  }
+
+
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -102,18 +125,19 @@ export class MapComponent {
   }
 
   resetMarkers(): void {
-    for(let i = 0; i < this.markerList.length; i++){
-      this.map.removeLayer(this.markerList[i]);
-    }
-    this.markerList = [];
-    this.getPigs().subscribe((data) => {
-      let tmpMarker:any;
-      for(let i = 0; i < data.length; i++){
-        tmpMarker = L.marker([data[i].data.latitude, data[i].data.longitude]).addTo(this.map);
-        tmpMarker.bindPopup("<b>" + data[i].data.notes + "</b>");
-        this.markerList.push(tmpMarker);
-      }
-    });
+    location.reload();
+  //   for(let i = 0; i < this.markerList.length; i++){
+  //     this.map.removeLayer(this.markerList[i]);
+  //   }
+  //   this.markerList = [];
+  //   this.getPigs().subscribe((data) => {
+  //     let tmpMarker:any;
+  //     for(let i = 0; i < data.length; i++){
+  //       tmpMarker = L.marker([data[i].data.latitude, data[i].data.longitude]).addTo(this.map);
+  //       tmpMarker.bindPopup("<b>" + data[i].data.notes + "</b>");
+  //       this.markerList.push(tmpMarker);
+  //     }
+  //   });
   }
 
 }

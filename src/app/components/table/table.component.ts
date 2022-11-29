@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PasswordComponent } from '../password/password.component';
 import { TableDialogComponent } from '../table-dialog/table-dialog.component';
 import { TableReportComponent } from '../table-report/table-report.component';
+import { MapComponent } from '../map/map.component';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { PasswordReportComponent } from '../password-report/password-report.component';
 import { Injectable } from '@angular/core';
@@ -10,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
+import { Router, Routes, Event} from '@angular/router';
+import { SharedService } from '../../shared.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -39,20 +42,31 @@ interface Pig {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
 })
 
 @Injectable()
 export class TableComponent implements OnInit {
+  @Output() changeMap = new EventEmitter<any>();
   
   title = 'dialog-app';
 
   pig:Pig[]
   query: string = ""
 
-  constructor(private http: HttpClient, private matDialog:MatDialog) {
+  constructor(private http: HttpClient, private matDialog:MatDialog, private router: Router, private sharedService: SharedService) {
     this.pig = [];
-    // Get number of total pigs
+    // Get number of total pigs 
+    this.getPigs().subscribe((data) => {
+      for(let i = 0; i < data.length; i++){
+        this.pig.push(<Pig>data[i].data);
+      }
+    });
+  }
+
+  fixStatus(evt:any){
+    this.pig = [];
+    // Get number of total pigs 
     this.getPigs().subscribe((data) => {
       for(let i = 0; i < data.length; i++){
         this.pig.push(<Pig>data[i].data);
@@ -61,7 +75,11 @@ export class TableComponent implements OnInit {
   }
 
   onPersonDelete(evt:any){
-    this.pig = this.pig.filter(p=>p.name!==evt["ind"])
+    for (let i = 0; i<this.pig.length; i++){
+      if (this.pig[i].name == evt["name"] && this.pig[i].pid == evt["pid"] && this.pig[i].phoneNumber == evt["phoneNum"] && this.pig[i].breed == evt["breed"] && this.pig[i].location == evt["location"] && this.pig[i].longitude == evt["longitude"] && this.pig[i].latitude == evt["latitude"] && this.pig[i].notes == evt["notes"] && this.pig[i].status == evt["status"]){
+        this.pig.splice(i,1);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -89,10 +107,20 @@ export class TableComponent implements OnInit {
     });
   }
 
+  // Shows the report page!!
   showReport(){
     this.matDialog.open(TableReportComponent,{
       width:'1200px',
       height: '900px',
+    }).afterClosed().subscribe(result => {
+      this.pig = [];
+      // Get number of total pigs 
+      this.getPigs().subscribe((data) => {
+        for(let i = 0; i < data.length; i++){
+          this.pig.push(<Pig>data[i].data);
+        }
+      });
+      this.sharedService.sendEvent();
     });
   }
 
@@ -102,71 +130,71 @@ export class TableComponent implements OnInit {
   }
 
   locationSort(doc:any){
-    let theTable:any = document.getElementById("theSortingTable")!.childNodes;
-    let locationList:any = [];
-    if (theTable != null && theTable.length > 0 && theTable[0].innerText != null){
-    for (let i: number = 0; i<document.getElementById("theSortingTable")!.childNodes.length -1; i++){
-      locationList.push(theTable[i].innerText.split("\n")[0]);
-    }
-    locationList = locationList.sort((a:string, b:string) => a.localeCompare(b));
-
-    for (let i = 0; i< locationList.length; i++){
-      for (let j = 0; j<document.getElementById("theSortingTable")!.childNodes.length -1; j++){
-        if (locationList[i] == theTable[j].innerText.split("\n")[0]){
-          document.getElementById("theSortingTable")!.appendChild(theTable[j]);
-        }
-      }
-    }
-  }
+    document.getElementById("theSortingTable")!.style.display = "none";
+    document.getElementById("theNameTable")!.style.display = "none";
+    document.getElementById("theTimeTable")!.style.display = "none";
+    document.getElementById("theStatusTable")!.style.display = "none";
+    document.getElementById("theLocationTable")!.style.display = "block";
   }
 
   nameSort(doc:any){
-    let theTable:any = document.getElementById("theSortingTable")!.childNodes;
-    let nameList:any = [];
-    if (theTable != null && theTable.length > 0 && theTable[0].innerText != null){
-    for (let i: number = 0; i<document.getElementById("theSortingTable")!.childNodes.length -1; i++){
-      nameList.push(theTable[i].innerText.split("\n")[1]);
-    }
-    nameList = nameList.sort((a:string, b:string) => a.localeCompare(b));
-
-    for (let i = 0; i< nameList.length; i++){
-      for (let j = 0; j<document.getElementById("theSortingTable")!.childNodes.length -1; j++){
-        if (nameList[i] == theTable[j].innerText.split("\n")[1]){
-          document.getElementById("theSortingTable")!.appendChild(theTable[j]);
-        }
-      }
-    }
-  }
+    document.getElementById("theSortingTable")!.style.display = "none";
+    document.getElementById("theLocationTable")!.style.display = "none";
+    document.getElementById("theTimeTable")!.style.display = "none";
+    document.getElementById("theStatusTable")!.style.display = "none";
+    document.getElementById("theNameTable")!.style.display = "block";
   }
 
   timeSort(doc:any){
-    let theTable:any = document.getElementById("theSortingTable")!.childNodes;
-    let timeList:any = [];
-    if (theTable != null && theTable.length > 0 && theTable[0].innerText != null){
-    for (let i: number = 0; i<document.getElementById("theSortingTable")!.childNodes.length -1; i++){
-      timeList.push(theTable[i].innerText.split("\n")[4]);
+    document.getElementById("theSortingTable")!.style.display = "none";
+    document.getElementById("theNameTable")!.style.display = "none";
+    document.getElementById("theLocationTable")!.style.display = "none";
+    document.getElementById("theStatusTable")!.style.display = "none";
+    document.getElementById("theTimeTable")!.style.display = "block";
+  }
+
+  statusSort(doc:any){
+    document.getElementById("theSortingTable")!.style.display = "none";
+    document.getElementById("theNameTable")!.style.display = "none";
+    document.getElementById("theTimeTable")!.style.display = "none";
+    document.getElementById("theLocationTable")!.style.display = "none";
+    document.getElementById("theStatusTable")!.style.display = "block";
+  }
+
+
+  noSort = (a: any, b:any) => {
+    return -1;
+  }
+
+  sortAlpha = (a: any, b:any) => {
+    if(a.value.name.localeCompare(b.value.name) == 1){
+      return 1;
     }
-    // timeList = timeList.sort((a:Date, b:Date) => (a.getTime).localeCompare(b.getTime));
-
-    
-    // timeList = timeList.sort((a: any, b: any) => {
-    //   return this.getTime(a.startDate) - this.getTime(b.startDate);
-    // });
-
-    console.log(timeList[0]);
-
-    // for (let i = 0; i< locationList.length; i++){
-    //   for (let j = 0; j<document.getElementById("theSortingTable")!.childNodes.length -1; j++){
-    //     if (locationList[i] == theTable[j].innerText.split("\n")[0]){
-    //       document.getElementById("theSortingTable")!.appendChild(theTable[j]);
-    //     }
-    //   }
-    // }
-  }
+    else{
+      return -1;
+    }
   }
 
-  private getTime(date?: Date) {
-    return date != null ? new Date(date).getTime() : 0;
+  sortLocation = (a: any, b:any) => {
+    if(a.value.location.localeCompare(b.value.location) == 1){
+      return 1;
+    }
+    else{
+      return -1;
+    }
+  }
+
+  sortTime = (a: any, b:any) => {
+    return a.value.added_on > b.value.added_on ? 1 : -1;
+  }
+
+  sortStatus = (a: any, b:any) => {
+    if(a.value.status.localeCompare(b.value.status) == 1){
+      return 1;
+    }
+    else{
+      return -1;
+    }
   }
 
 

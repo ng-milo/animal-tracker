@@ -21,8 +21,7 @@ export class PasswordReportComponent {
     (<HTMLInputElement>document.getElementById("reportPassword")!).reportValidity();
     const md5 = new Md5();
     if(md5.appendStr(password).end() == "84892b91ef3bf9d216bbc6e88d74a77c"){
-      this.dialogRef.close();
-      this.showReport();
+      this.dialogRef.close(true);
     }
     else{
       (<HTMLInputElement>document.getElementById("reportPassword")!).setCustomValidity("Incorrect password");
@@ -31,19 +30,4 @@ export class PasswordReportComponent {
       (<HTMLInputElement>document.getElementById("reportPassword")!).reportValidity();
     }
   }
-
-  showDialog(){
-    this.matDialog.open(TableDialogComponent,{
-      width:'590px',
-      height: '850px',
-    });
-  }
-
-  showReport(){
-    this.matDialog.open(TableReportComponent,{
-      width:'1200px',
-      height: '900px',
-    });
-  }
-
 }

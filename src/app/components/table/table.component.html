@@ -3,18 +3,55 @@
     <div (click)="locationSort(this)">Location</div>
     <div (click)="nameSort(this)">Reported By</div>
     <div (click)="timeSort(this)">Time Reported</div>
-    <div>Status</div>
+    <div (click)="statusSort(this)">Status</div>
     <div></div>
 </div>
 <div id="theSortingTable">
     <app-pig
-    *ngFor="let p of pig | search:query"
+    *ngFor="let p of pig | keyvalue:noSort"
     [pig]="p"
     (delete) = "onPersonDelete($event)"
+    (changeStat) = "fixStatus($event)"
     ></app-pig>
-
 </div>
 
+<div id="theLocationTable" class="hideThis">
+    <app-pig
+    *ngFor="let p of pig | keyvalue:sortLocation"
+    [pig]="p"
+    (delete) = "onPersonDelete($event)"
+    (changeStat) = "fixStatus($event)"
+    ></app-pig>
+</div>
+
+<div id="theNameTable" class="hideThis">
+    <app-pig
+    *ngFor="let p of pig | keyvalue:sortAlpha"
+    [pig]="p"
+    (delete) = "onPersonDelete($event)"
+    (changeStat) = "fixStatus($event)"
+    ></app-pig>
+</div>
+
+<div id="theTimeTable" class="hideThis">
+    <app-pig
+    *ngFor="let p of pig | keyvalue:sortTime"
+    [pig]="p"
+    (delete) = "onPersonDelete($event)"
+    (changeStat) = "fixStatus($event)"
+    ></app-pig>
+</div>
+
+<div id="theStatusTable" class="hideThis">
+    <app-pig
+    *ngFor="let p of pig | keyvalue:sortStatus"
+    [pig]="p"
+    (delete) = "onPersonDelete($event)"
+    (changeStat) = "fixStatus($event)"
+    ></app-pig>
+</div>
+
+
 <div class="mr-10">
-    <button class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300 w-full rounded-lg bg-amber-300 hover:bg-amber-400 py-3 mx-5 text-center font-semibold text-white text-2xl" (click)="showPasswordReport()">Submit</button>
+    <button class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300 w-full rounded-lg bg-amber-300 hover:bg-amber-400 py-3 mx-5 text-center font-semibold text-white text-2xl" (click)="showReport()">Submit</button>
 </div>

@@ -18,6 +18,8 @@ import { SearchPipe } from './search.pipe';
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordReportComponent } from './components/password-report/password-report.component';
 
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { PasswordReportComponent } from './components/password-report/password-r
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

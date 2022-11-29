@@ -1,3 +1,7 @@
+.hideThis {
+  display: none;
+}
+
 .container {
     display:grid;
     grid-template-columns: repeat(5, 1fr);
