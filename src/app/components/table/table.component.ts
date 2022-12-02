@@ -113,14 +113,15 @@ export class TableComponent implements OnInit {
       width:'1200px',
       height: '900px',
     }).afterClosed().subscribe(result => {
-      this.pig = [];
-      // Get number of total pigs 
-      this.getPigs().subscribe((data) => {
-        for(let i = 0; i < data.length; i++){
-          this.pig.push(<Pig>data[i].data);
-        }
-      });
-      this.sharedService.sendEvent();
+      if (result){
+        this.pig = [];
+        // Get number of total pigs 
+        this.getPigs().subscribe((data) => {
+          for(let i = 0; i < data.length; i++){
+            this.pig.push(<Pig>data[i].data);
+          }
+        });
+      }
     });
   }
 

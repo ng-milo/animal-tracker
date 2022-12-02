@@ -6,6 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
+import { SharedService } from '../../shared.service';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { PopupComponent } from '../popup/popup.component';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -46,11 +49,11 @@ interface coordinates {
 
 @Injectable()
 export class TableReportComponent {
-
+  prevPhoneNum: string = " ";
   onOffVar = true;
   places: Array<coordinates> = [];
 
-  constructor(private http: HttpClient, private dialogRef: MatDialogRef<Dialog>) {
+  constructor(private http: HttpClient, private dialogRef: MatDialogRef<Dialog>, private sharedService: SharedService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -59,6 +62,7 @@ export class TableReportComponent {
     let placeStuff = document.getElementById("reportPreviousPlace")!;
     // Get number of total pigs 
     this.getPigs().subscribe((data) => {
+      this.places = [];
       for(let i = 0; i < data.length; i++){
         let tmpCoord: coordinates = {
           location: data[i].data.location,
@@ -66,14 +70,25 @@ export class TableReportComponent {
           latitude: data[i].data.latitude,
         }
         this.places.push(tmpCoord);
+      }
+
+      for (let i = 0; i<this.places.length; i++){
+        for (let j = 0; j<this.places.length; j++){
+          if (this.places[i] != undefined && this.places[j] != undefined){
+            if (i != j && this.places[i].location == this.places[j].location){
+              this.places.splice(j, 1);
+            }
+          }
+        }
+      }
+
+      for(let i = 0; i < this.places.length; i++){
         let newElement = document.createElement("option");
-        newElement.setAttribute("value", data[i].data.location);
-        newElement.innerHTML = data[i].data.location;
+        newElement.setAttribute("value", this.places[i].location);
+        newElement.innerHTML = this.places[i].location;
         placeStuff.appendChild(newElement);
       }
     });
-
-
 
   }
 
@@ -82,9 +97,22 @@ export class TableReportComponent {
     .pipe();
   }
 
+  checkPhone(){
+    let tmp = (<HTMLInputElement>document.getElementById("reportNumber")!).value;
+    if (tmp == this.prevPhoneNum){
+      (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("Please enter numbers only")
+    } 
+    else{
+      (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("");
+    }
+    (<HTMLInputElement>document.getElementById("reportNumber")!).value = tmp;
+    (<HTMLInputElement>document.getElementById("reportNumber")!).reportValidity();
+    this.prevPhoneNum = tmp;
+  }
+
   checkInfo() {
     // Name
-    let tmp:string = (<HTMLInputElement>document.getElementById("reportName")!).value.replace(/[^A-Za-z]+$/g, '');
+    let tmp:string = (<HTMLInputElement>document.getElementById("reportName")!).value.replace(/[^A-Za-z ]+$/g, '');
     if(tmp != (<HTMLInputElement>document.getElementById("reportName")!).value){
       (<HTMLInputElement>document.getElementById("reportName")!).setCustomValidity("Please enter letters only")
     } 
@@ -94,19 +122,8 @@ export class TableReportComponent {
     (<HTMLInputElement>document.getElementById("reportName")!).value = tmp;
     (<HTMLInputElement>document.getElementById("reportName")!).reportValidity();
 
-    // Phone number
-    tmp = (<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '');
-    if(tmp != (<HTMLInputElement>document.getElementById("reportNumber")!).value){
-      (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("Please enter numbers only")
-    } 
-    else{
-      (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("")
-    }
-    (<HTMLInputElement>document.getElementById("reportNumber")!).value = tmp;
-    (<HTMLInputElement>document.getElementById("reportNumber")!).reportValidity();
-
     // Breed
-    tmp = (<HTMLInputElement>document.getElementById("reportBreed")!).value.replace(/[^A-Za-z]+$/g, '');
+    tmp = (<HTMLInputElement>document.getElementById("reportBreed")!).value.replace(/[^A-Za-z ]+$/g, '');
     if(tmp != (<HTMLInputElement>document.getElementById("reportBreed")!).value){
       (<HTMLInputElement>document.getElementById("reportBreed")!).setCustomValidity("Please enter letters only")
     } 
@@ -128,7 +145,7 @@ export class TableReportComponent {
     (<HTMLInputElement>document.getElementById("reportId")!).reportValidity();
 
     // nameLocation
-    tmp = (<HTMLInputElement>document.getElementById("reportNames")!).value.replace(/[^A-Za-z]+$/g, '');
+    tmp = (<HTMLInputElement>document.getElementById("reportNames")!).value.replace(/[^A-Za-z ]+$/g, '');
     if(tmp != (<HTMLInputElement>document.getElementById("reportNames")!).value){
       (<HTMLInputElement>document.getElementById("reportNames")!).setCustomValidity("Please enter letters only")
     } 
@@ -224,64 +241,94 @@ export class TableReportComponent {
     }
 
   submitInfo() {
-    if ((<HTMLInputElement>document.getElementById("reportName")!).value != null && (<HTMLInputElement>document.getElementById("reportNumber")!).value != null && (<HTMLInputElement>document.getElementById("reportBreed")!).value != null && (<HTMLInputElement>document.getElementById("reportId")!).value != null && (<HTMLInputElement>document.getElementById("reportNames")!).value != null && (<HTMLInputElement>document.getElementById("reportLong")!).value != null && (<HTMLInputElement>document.getElementById("reportLati")!).value != null && (<HTMLInputElement>document.getElementById("reportNotes")!).value != null) {
-
-      this.checkInfo();
-      // Needs to save time, date, and status
-      // First create outlineFrame with all of the pig information inside it
-      let tmpPig: Pig;
-      if (this.onOffVar){
-        let places = (<HTMLInputElement>document.getElementById("reportPreviousPlace")!).value
-        let tmpLong: number = 0;
-        let tmpLat: number = 0;
-        for (let i = 0; i<this.places.length; i++){
-          if (this.places[i].location == places){
-            tmpLong = this.places[i].longitude;
-            tmpLat = this.places[i].latitude;
+    if ((<HTMLInputElement>document.getElementById("reportName")!).value != "" && (<HTMLInputElement>document.getElementById("reportNumber")!).value != "" && (<HTMLInputElement>document.getElementById("reportBreed")!).value != "" && (<HTMLInputElement>document.getElementById("reportId")!).value != "" && (<HTMLInputElement>document.getElementById("reportNames")!).value != "" && (<HTMLInputElement>document.getElementById("reportLong")!).value != "" && (<HTMLInputElement>document.getElementById("reportLati")!).value != "" && (<HTMLInputElement>document.getElementById("reportNotes")!).value != "") {
+      if ((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '').toString().length == 10){
+        this.checkInfo();
+        this.checkPhone();
+        // Needs to save time, date, and status
+        // First create outlineFrame with all of the pig information inside it
+        let tmpPig: Pig;
+        if (this.onOffVar){
+          let places = (<HTMLInputElement>document.getElementById("reportPreviousPlace")!).value
+          let tmpLong: number = 0;
+          let tmpLat: number = 0;
+          for (let i = 0; i<this.places.length; i++){
+            if (this.places[i].location == places){
+              tmpLong = this.places[i].longitude;
+              tmpLat = this.places[i].latitude;
+            }
+          }
+          tmpPig = {
+            name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+            phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '')),
+            breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+            pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+            location: <string>places,
+            longitude: tmpLong,
+            latitude: tmpLat,
+            notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+            added_on: new Date(),
+            status: "READY FOR PICKUP",
           }
         }
-        tmpPig = {
-          name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
-          phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value),
-          breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
-          pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
-          location: <string>places,
-          longitude: tmpLong,
-          latitude: tmpLat,
-          notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
-          added_on: new Date(),
-          status: "READY FOR PICKUP",
+        else {
+          tmpPig = {
+            name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+            phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '')),
+            breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+            pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+            location: <string>(<HTMLInputElement>document.getElementById("reportNames")!).value,
+            longitude: Number((<HTMLInputElement>document.getElementById("reportLong")!).value),
+            latitude: Number((<HTMLInputElement>document.getElementById("reportLati")!).value),
+            notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+            added_on: new Date(),
+            status: "READY FOR PICKUP",
+          }
         }
+        let totalPigs: number = 0;
+        this.getPig().subscribe((data) => {
+          totalPigs = data.length;
+          let thisKey = this.generateUniqueKey(data, totalPigs);
+          let content: outlineFrame = {
+            key: "Pig" + thisKey,
+            data: tmpPig,
+          }
+          this.addPig(content).subscribe((data) => {
+            this.sharedService.sendEvent();
+          });
+        });
+        // Refresh the table component
+        
+        // Close the website
+        this.dialogRef.close(true);
       }
-      else {
-        tmpPig = {
-          name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
-          phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value),
-          breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
-          pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
-          location: <string>(<HTMLInputElement>document.getElementById("reportNames")!).value,
-          longitude: Number((<HTMLInputElement>document.getElementById("reportLong")!).value),
-          latitude: Number((<HTMLInputElement>document.getElementById("reportLati")!).value),
-          notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
-          added_on: new Date(),
-          status: "READY FOR PICKUP",
-        }
+      else{
+        (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("Please ensure input is a valid phone number");
+        (<HTMLInputElement>document.getElementById("reportNumber")!).reportValidity();
       }
-      let totalPigs: number = 0;
-      this.getPig().subscribe((data) => {
-        totalPigs = data.length;
-        let content: outlineFrame = {
-          key: "Pig" + totalPigs,
-          data: tmpPig,
-        }
-        this.addPig(content).subscribe((data) => {});
-      });
-      // Refresh the table component
-      
-      // Close the website
-      this.dialogRef.close();
-
     }
+    else{
+      this.snackBar.openFromComponent(PopupComponent, {
+        duration: 5000,
+      });
+    }
+  }
+
+  generateUniqueKey(obj: any, size: number):number {
+    let theSize: number = size;
+    while(this.verifyNone(obj, theSize) == false){
+      theSize++;
+    }
+    return theSize;
+  }
+
+  verifyNone(obj: any, name:number) {
+    for (let i = 0; i<obj.length; i++){
+      if (obj[i].key == "Pig" + name){
+        return false;
+      }
+    }
+    return true;
   }
 
   addPig(pig: any): Observable<any> {

@@ -3,12 +3,10 @@
     <div name="pigLocation" id="location" [textContent]="pig.location"></div>
     <div name="pigName" id="name" [textContent]="pig.name"></div>
     <br> {{ pig.added_on | date:'d MMM, yyyy' }} <br>
-    <!-- <div id="status" [textContent]="pig.status" (click)="changeStatus(this, $event)"></div> -->
-    <div id="status" [textContent]="pig.status" (click)="checkPasswordStatus(this, $event)"></div>
+    <div id="status" matTooltip="Change status" matTooltipPosition="before" matTooltipClass="statusTipButton" [textContent]="pig.status" (click)="checkPasswordStatus(this, $event)"></div>
     <div>
         <button (click)="showDialog(this)">More Info</button>
         <button class="buttonDelete" id="tableDelete" (click)="signalDelete(this, $event, pig.name, pig.phoneNumber, pig.date, pig.location, pig.notes, pig.breed, pig.pid, pig.latitude, pig.longitude, pig.status)">Delete</button>
-        <!-- (click)="deletePig(this)" (click)="onDelete($event,pig.name)" -->
     </div>
 </div>
 

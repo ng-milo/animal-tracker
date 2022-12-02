@@ -13,7 +13,7 @@
           </div>
           <div class="mb-5 w-full px-3 sm:w-1/2">
             <label for="pNumber" class="mb-3 block text-base"> Phone Number </label>
-            <input type="text" name="pNumber" id="reportNumber" placeholder="(123)-345-6789" class="border-gray w-full rounded-md border py-3.5 pl-5 text-base outline-none focus:border-amber-200" (input)="checkInfo()" />
+            <input type="text" name="pNumber" id="reportNumber" placeholder="(123)-345-6789" mask="(000)-000-0000" class="border-gray w-full rounded-md border py-3.5 pl-5 text-base outline-none focus:border-amber-200" (input)="checkPhone()" />
           </div>
         </div>
         <!-- Second Row -->
@@ -29,7 +29,7 @@
         </div>
         <!-- Third Row -->
         <div class="mb-5 flex">
-          <mat-checkbox (change)="switchTest()">Previous Location</mat-checkbox>
+          <mat-checkbox (change)="switchTest()">New Location</mat-checkbox>
         </div>
 
         <!-- Fourth Row -->

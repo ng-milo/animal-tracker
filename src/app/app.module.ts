@@ -17,9 +17,15 @@ import { PigComponent } from './components/pig/pig.component'
 import { SearchPipe } from './search.pipe';
 import { PasswordComponent } from './components/password/password.component';
 import { PasswordReportComponent } from './components/password-report/password-report.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { PopupComponent } from './components/popup/popup.component'
 
+import { MatSnackBarModule } from '@angular/material/snack-bar'; 
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -33,6 +39,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     PigComponent,
     PasswordComponent,
     PasswordReportComponent,
+    PopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,7 +49,12 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    NgxMaskModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

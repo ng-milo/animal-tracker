@@ -125,19 +125,8 @@ export class MapComponent implements OnInit {
   }
 
   resetMarkers(): void {
-    location.reload();
-  //   for(let i = 0; i < this.markerList.length; i++){
-  //     this.map.removeLayer(this.markerList[i]);
-  //   }
-  //   this.markerList = [];
-  //   this.getPigs().subscribe((data) => {
-  //     let tmpMarker:any;
-  //     for(let i = 0; i < data.length; i++){
-  //       tmpMarker = L.marker([data[i].data.latitude, data[i].data.longitude]).addTo(this.map);
-  //       tmpMarker.bindPopup("<b>" + data[i].data.notes + "</b>");
-  //       this.markerList.push(tmpMarker);
-  //     }
-  //   });
+    this.map.remove();
+    this.initMap();
   }
 
 }

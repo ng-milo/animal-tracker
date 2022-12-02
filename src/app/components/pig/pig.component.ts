@@ -94,7 +94,9 @@ export class PigComponent {
     this.getPig().subscribe((data: any) => {
       for(let i = 0; i < data.length; i++){
         if (data[i].data.name == tmp.pig.name && data[i].data.phoneNumber == tmp.pig.phoneNumber && data[i].data.breed == tmp.pig.breed && data[i].data.pid == tmp.pig.pid && data[i].data.location == tmp.pig.location && data[i].data.notes == tmp.pig.notes && data[i].data.status == tmp.pig.status && data[i].data.latitude == tmp.pig.latitude && data[i].data.longitude == tmp.pig.longitude && data[i].data.added_on == tmp.pig.added_on && data[i].data.status == tmp.pig.status && data[i].data.latitude == tmp.pig.latitude && data[i].data.longitude == tmp.pig.longitude && data[i].data.added_on == tmp.pig.added_on && data[i].data.status == tmp.pig.status){
-          this.remPig(data[i].key).subscribe((tmpdata: any) => {});
+          this.remPig(data[i].key).subscribe((tmpdata: any) => {
+            location.reload();
+          });
           // TODO: Still needs to delete the pig from the table
           break;
         }
