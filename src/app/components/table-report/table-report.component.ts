@@ -241,7 +241,73 @@ export class TableReportComponent {
     }
 
   submitInfo() {
-    if ((<HTMLInputElement>document.getElementById("reportName")!).value != "" && (<HTMLInputElement>document.getElementById("reportNumber")!).value != "" && (<HTMLInputElement>document.getElementById("reportBreed")!).value != "" && (<HTMLInputElement>document.getElementById("reportId")!).value != "" && (<HTMLInputElement>document.getElementById("reportNames")!).value != "" && (<HTMLInputElement>document.getElementById("reportLong")!).value != "" && (<HTMLInputElement>document.getElementById("reportLati")!).value != "" && (<HTMLInputElement>document.getElementById("reportNotes")!).value != "") {
+    if ((<HTMLInputElement>document.getElementById("reportName")!).value != "" && (<HTMLInputElement>document.getElementById("reportNumber")!).value != "" && (<HTMLInputElement>document.getElementById("reportBreed")!).value != "" && (<HTMLInputElement>document.getElementById("reportId")!).value != "" && (<HTMLInputElement>document.getElementById("reportPreviousPlace")!).value != "") {
+      if ((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '').toString().length == 10){
+        this.checkInfo();
+        this.checkPhone();
+        // Needs to save time, date, and status
+        // First create outlineFrame with all of the pig information inside it
+        let tmpPig: Pig;
+        if (this.onOffVar){
+          let places = (<HTMLInputElement>document.getElementById("reportPreviousPlace")!).value
+          let tmpLong: number = 0;
+          let tmpLat: number = 0;
+          for (let i = 0; i<this.places.length; i++){
+            if (this.places[i].location == places){
+              tmpLong = this.places[i].longitude;
+              tmpLat = this.places[i].latitude;
+            }
+          }
+          tmpPig = {
+            name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+            phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '')),
+            breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+            pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+            location: <string>places,
+            longitude: tmpLong,
+            latitude: tmpLat,
+            notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+            added_on: new Date(),
+            status: "READY FOR PICKUP",
+          }
+        }
+        else {
+          tmpPig = {
+            name: <string>(<HTMLInputElement>document.getElementById("reportName")!).value,
+            phoneNumber: Number((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '')),
+            breed: <string>(<HTMLInputElement>document.getElementById("reportBreed")!).value,
+            pid: Number((<HTMLInputElement>document.getElementById("reportId")!).value),
+            location: <string>(<HTMLInputElement>document.getElementById("reportNames")!).value,
+            longitude: Number((<HTMLInputElement>document.getElementById("reportLong")!).value),
+            latitude: Number((<HTMLInputElement>document.getElementById("reportLati")!).value),
+            notes: <string>(<HTMLInputElement>document.getElementById("reportNotes")!).value,
+            added_on: new Date(),
+            status: "READY FOR PICKUP",
+          }
+        }
+        let totalPigs: number = 0;
+        this.getPig().subscribe((data) => {
+          totalPigs = data.length;
+          let thisKey = this.generateUniqueKey(data, totalPigs);
+          let content: outlineFrame = {
+            key: "Pig" + thisKey,
+            data: tmpPig,
+          }
+          this.addPig(content).subscribe((data) => {
+            this.sharedService.sendEvent();
+          });
+        });
+        // Refresh the table component
+        
+        // Close the website
+        this.dialogRef.close(true);
+      }
+      else{
+        (<HTMLInputElement>document.getElementById("reportNumber")!).setCustomValidity("Please ensure input is a valid phone number");
+        (<HTMLInputElement>document.getElementById("reportNumber")!).reportValidity();
+      }
+    }
+    else if ((<HTMLInputElement>document.getElementById("reportName")!).value != "" && (<HTMLInputElement>document.getElementById("reportNumber")!).value != "" && (<HTMLInputElement>document.getElementById("reportBreed")!).value != "" && (<HTMLInputElement>document.getElementById("reportId")!).value != "" && (<HTMLInputElement>document.getElementById("reportNames")!).value != "" && (<HTMLInputElement>document.getElementById("reportLong")!).value != "" && (<HTMLInputElement>document.getElementById("reportLati")!).value != "") {
       if ((<HTMLInputElement>document.getElementById("reportNumber")!).value.replace(/[^0-9]/g, '').toString().length == 10){
         this.checkInfo();
         this.checkPhone();
@@ -308,9 +374,16 @@ export class TableReportComponent {
       }
     }
     else{
-      this.snackBar.openFromComponent(PopupComponent, {
-        duration: 5000,
-      });
+      if ((<HTMLInputElement>document.getElementById("reportPreviousPlace")!).value == ""){
+        this.snackBar.open("⠀⠀⠀⠀✿ Please select an existing location ✿", "", {
+          duration: 5000,
+        });
+      }
+      else{
+        this.snackBar.openFromComponent(PopupComponent, {
+          duration: 5000,
+        });
+      }
     }
   }
 
