@@ -2,7 +2,7 @@
 <div class="container alternateTwo">
     <div name="pigLocation" id="location" [textContent]="pig.location"></div>
     <div name="pigName" id="name" [textContent]="pig.name"></div>
-    <br> {{ pig.added_on | date:'d MMM, yyyy' }} <br>
+    {{ pig.added_on | date:'d MMM, yyyy' }}
     <div id="status" matTooltip="Change status" matTooltipPosition="after" style="max-width: 200px;" [textContent]="pig.status" (click)="checkPasswordStatus(this, $event)"></div>
     <div>
         <button (click)="showDialog(this)">More Info</button>
