@@ -14,5 +14,5 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title: string = "Farmer Hogget's Pig Service";
+  title: string = "Animal Finding Service";
 }
